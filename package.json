@@ -1,0 +1,40 @@
+{
+  "name": "checksec-js",
+  "version": "1.0.0",
+  "description": "Check various security hardening features on ELF, PE and Mach-O binaries",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tresorit/checksec-js.git"
+  },
+  "keywords": [
+    "checksec",
+    "elf",
+    "pe",
+    "macho",
+    "hardening",
+    "binary",
+    "relro",
+    "pie",
+    "aslr",
+    "rpath",
+    "runpath",
+    "stack protector",
+    "canary"
+  ],
+  "author": "Tamas Koczka <koczka@tresorit.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tresorit/checksec-js/issues"
+  },
+  "homepage": "https://github.com/tresorit/checksec-js#readme",
+  "dependencies": {
+    "kaitai-struct": "^0.8.0-SNAPSHOT.2"
+  }
+}

@@ -1,0 +1,24 @@
+<html>
+<head>
+    <script src="node_modules/kaitai-struct/KaitaiStream.js"></script>
+    <script src="Elf.js"></script>
+</head>
+<body>
+    <pre id="dump">parsing in process...</pre>
+    <script>
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", "examples/elf_all_enabled", true);
+        oReq.responseType = "arraybuffer";
+
+        oReq.onload = function (oEvent) {
+            var arrayBuffer = oReq.response;
+            var parsedElf = new Elf(new KaitaiStream(arrayBuffer));
+            document.getElementById("dump").textContent =
+                "machineType: " + Elf.Machine[parsedElf.header.machine] + "\n" +
+                "program headers:\n" + parsedElf.header.sectionHeaders.map(x => " - " + x.name).join("\n");
+        };
+
+        oReq.send(null);
+    </script>
+</body>
+</html>
