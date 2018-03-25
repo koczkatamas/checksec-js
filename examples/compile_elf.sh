@@ -31,5 +31,5 @@ gcc main.c -Wl,-rpath,EXAMPLE_RUNPATH_DIRECTORY,--enable-new-dtags -o elf_uses_r
 echo -e "${GREEN}Compiling ELF with all hardenings enabled (elf_all_enabled)${NC}"
 gcc main.c -Wl,-z,relro,-z,now -pie -fPIE -o elf_all_enabled
 
-echo -e "${GREEN}Compiling ELF with all hardening disabled (elf_all_disabled)${NC}"
+echo -e "${GREEN}Compiling ELF with all hardenings disabled (elf_all_disabled)${NC}"
 gcc main.c -Wl,-z,norelro,-rpath,EXAMPLE_RPATH_DIRECTORY -fno-stack-protector -z execstack -o elf_all_disabled
