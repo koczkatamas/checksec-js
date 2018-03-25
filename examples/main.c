@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 void stack_canary_missing() {
     printf("[FAIL] Stack canary is missing.\n");
-    exit(2);
+    _exit(2);
 }
 
 int main(int argc, char** argv) {
@@ -28,7 +29,7 @@ int main(int argc, char** argv) {
 
     if (argc > 1) {
         printf("argv[1] = %s\n", argv[1]);
-        if (!strcmp(argv[1], "--test-nx")) {
+        if (!strcmp(argv[1], "--test-nx-stack")) {
             // 0:  b8 39 05 00 00          mov    eax, 1337
             // 5:  c3                      ret
             g.stackBuf[0] = 0xb8;
@@ -39,6 +40,18 @@ int main(int argc, char** argv) {
             g.stackBuf[5] = 0xc3;
             printf("Trying to execute code on the stack. Expect a crash (good) or a note that NX is disabled.\n");
             g.value = ((int (*)())g.stackBuf)();
+            printf("[FAIL] NX is disabled. Result of test function: %d\n", g.value);
+        } else if (!strcmp(argv[1], "--test-nx-heap")) {
+            // 0:  b8 39 05 00 00          mov    eax, 1337
+            // 5:  c3                      ret
+            g.heapPtr[0] = 0xb8;
+            g.heapPtr[1] = 0x39;
+            g.heapPtr[2] = 0x05;
+            g.heapPtr[3] = 0x00;
+            g.heapPtr[4] = 0x00;
+            g.heapPtr[5] = 0xc3;
+            printf("Trying to execute code on the heap. Expect a crash (good) or a note that NX is disabled.\n");
+            g.value = ((int (*)())g.heapPtr)();
             printf("[FAIL] NX is disabled. Result of test function: %d\n", g.value);
         } else if (!strcmp(argv[1], "--test-canary")) {
             g.ptr = &stack_canary_missing;
