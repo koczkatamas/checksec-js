@@ -1,14 +1,16 @@
 const fs = require("fs");
-const Elf = require("./Elf");
 const KaitaiStream = require('kaitai-struct/KaitaiStream');
+const Elf = require("./Elf");
+const MachO = require("./MachO");
+const DosMz = require("./DosMz");
 
-const files = fs.readdirSync("examples").filter(x => !x.endsWith(".sh") && !x.endsWith(".c"));
-for (const file of files) {
-    const fileContent = fs.readFileSync(`examples/${file}`);
+for (const elfFn of fs.readdirSync("examples").filter(x => x.startsWith("elf_"))) {
+    continue;
+    const fileContent = fs.readFileSync(`examples/${elfFn}`);
     const parsedElf = new Elf(new KaitaiStream(fileContent));
     const prgHdrs = parsedElf.header.programHeaders;
 
-    console.log(`${file}: ${Elf.ObjType[parsedElf.header.eType]} ${Elf.Machine[parsedElf.header.machine]} ${Elf.Bits[parsedElf.bits]} ${Elf.Endian[parsedElf.endian]} ${Elf.OsAbi[parsedElf.abi]} v${parsedElf.eiVersion}`);
+    console.log(`${elfFn}: ${Elf.ObjType[parsedElf.header.eType]} ${Elf.Machine[parsedElf.header.machine]} ${Elf.Bits[parsedElf.bits]} ${Elf.Endian[parsedElf.endian]} ${Elf.OsAbi[parsedElf.abi]} v${parsedElf.eiVersion}`);
 
     const dynamicEntries = prgHdrs.map(x => x.dynamic).filter(x => x);
     if (dynamicEntries.length > 1)
@@ -34,5 +36,10 @@ for (const file of files) {
     console.log(`  RPATH: ${rpath}`);
     console.log(`  RUNPATH: ${runpath}`);
     console.log("");
-    //console.log(JSON.stringify(parsedElf, function(key, value) { return key.startsWith('_') ? undefined : value; }, 4));
+}
+
+for (const machoFn of fs.readdirSync("examples").filter(x => x.startsWith("macho_"))) {
+    const fileContent = fs.readFileSync(`examples/${machoFn}`);
+    const parsedMacho = new MachO(new KaitaiStream(fileContent));
+    console.log(parsedMacho);
 }
